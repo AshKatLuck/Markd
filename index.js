@@ -1,19 +1,18 @@
-const express=require('express');
-const mongoose=require('mongoose');
-const path=require("path");
-const enjineMate=require("ejs-mate")
+const express = require("express");
+const mongoose = require("mongoose");
+const path = require("path");
+const enjineMate = require("ejs-mate");
 
-const app=express();
-
+const app = express();
 
 //set ejs engine
 app.use("ejs", enjineMate);
 //set views directory
 app.set("view engine", "ejs");
-app.set("views",path.join(__dirname,"views"))
+app.set("views", path.join(__dirname, "views"));
 
 //connect to the database
-const dburl="mongodb://127.0.0.1:27017/markd";
+const dburl = "mongodb://127.0.0.1:27017/markd";
 mongoose
   .connect(dburl)
   .then(() => {
@@ -24,10 +23,28 @@ mongoose
     console.error(err);
   });
 
-  app.get('/',(req,res)=>{
-    res.render("home");
-  })
+//location routes
+app.get("/location", (req, res) => {
+  res.render("location/location.ejs");
+});
 
-  app.listen(3000, ()=>{
-    console.log("listening at port 3000")
-  })
+app.get("/location/new", (req, res) => {
+  res.render("location/new");
+});
+
+app.get("/location/edit/:id", (req, res) => {
+  res.render("location/edit");
+});
+app.get("/location/:id", (req, res) => {
+  const { id } = req.params;
+  res.render("location/show");
+});
+
+//homepage route
+app.get("/", (req, res) => {
+  res.render("home");
+});
+
+app.listen(3000, () => {
+  console.log("listening at port 3000");
+});
