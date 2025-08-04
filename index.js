@@ -4,16 +4,9 @@ const path = require("path");
 const enjineMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const Location = require("./models/location");
+const { dateForHTMLForm, convertToZ } = require("./utils/dateFunctions.js");
 
 const app = express();
-
-//function to convert date js date object into mm-dd-yyyy format
-function formartDate(date) {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const year = String(date.getFullYear());
-  return `${year}-${month}-${day}`;
-}
 
 //set ejs engine
 app.use("ejs", enjineMate);
@@ -56,6 +49,10 @@ app.post("/locations", async (req, res) => {
   } else {
     location.hasTravelled = false;
   }
+  const date = new Date(location.dateOfVisit);
+  const modifiedDate = convertToZ(date);
+  location.dateOfVisit = modifiedDate;
+
   const r = await location.save();
   res.redirect(`/locations/${r._id}`);
 });
@@ -63,7 +60,7 @@ app.post("/locations", async (req, res) => {
 app.get("/locations/:id/edit", async (req, res) => {
   const { id } = req.params;
   const location = await Location.findById(id);
-  const dateInHTMLFormat = formartDate(location.dateOfVisit);
+  const dateInHTMLFormat = dateForHTMLForm(location.dateOfVisit);
   res.render("locations/edit", { location, dateInHTMLFormat });
 });
 
@@ -75,24 +72,36 @@ app.patch("/locations/:id", async (req, res) => {
   } else {
     editLocation.hasTravelled = false;
   }
+  const date = new Date(editLocation.dateOfVisit);
+  const modifiedDate = convertToZ(date);
+  //   console.log("date:", date);
+  //   console.log("modifiedDate:", modifiedDate);
+  editLocation.dateOfVisit = modifiedDate;
+  //   console.log("editLocation", editLocation);
+
   const location = await Location.findByIdAndUpdate(
     { _id: id },
     { ...editLocation },
     { runValidators: true }
   );
+  //   console.log("location", location);
   res.redirect(`/locations/${location._id}`);
 });
 
 app.delete("/locations/:id", async (req, res) => {
   const { id } = req.params;
   const result = await Location.findByIdAndDelete({ _id: id });
-  console.log(result);
+  //   console.log(result);
   res.redirect("/locations");
 });
 
 app.get("/locations/:id", async (req, res) => {
   const { id } = req.params;
   const location = await Location.findById(id);
+  //   const date = new Date(location.dateOfVisit);
+  //   const offset = date.getTimezoneOffset();
+  //   const dateToDisplay = date + offset;
+  //   console.log(dateToDisplay);
   res.render("locations/show", { location });
 });
 
