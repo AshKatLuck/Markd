@@ -31,33 +31,60 @@ mongoose
   });
 
 //location routes
-app.get("/location", (req, res) => {
-  res.render("location/location.ejs");
+app.get("/locations", async (req, res) => {
+  const locations = await Location.find({});
+  res.render("locations/index", { locations });
 });
 
-app.get("/location/new", (req, res) => {
-  res.render("location/new");
+app.get("/locations/new", (req, res) => {
+  res.render("locations/new");
 });
 
-app.post("/location", async (req, res) => {
+app.post("/locations", async (req, res) => {
   const location = new Location(req.body.location);
-  console.log(location.hasTravelled);
+
   if (location.hasTravelled) {
     location.hasTravelled = true;
   } else {
     location.hasTravelled = false;
   }
-  res.send(location);
-  //   const r = await location.save();
-  //   res.send(r);
+  const r = await location.save();
+  res.redirect(`/locations/${r._id}`);
 });
 
-app.get("/location/edit/:id", (req, res) => {
-  res.render("location/edit");
-});
-app.get("/location/:id", (req, res) => {
+app.get("/locations/:id/edit", async (req, res) => {
   const { id } = req.params;
-  res.render("location/show");
+  const location = await Location.findById(id);
+  res.render("locations/edit", { location });
+});
+
+app.patch("/locations/:id", async (req, res) => {
+  const { id } = req.params;
+  const editLocation = req.body.location;
+  if (editLocation.hasTravelled) {
+    editLocation.hasTravelled = true;
+  } else {
+    editLocation.hasTravelled = false;
+  }
+  const location = await Location.findByIdAndUpdate(
+    { _id: id },
+    { ...editLocation },
+    { runValidators: true }
+  );
+  res.redirect(`/locations/${location._id}`);
+});
+
+app.delete("/locations/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await Location.findByIdAndDelete({ _id: id });
+  console.log(result);
+  res.redirect("/locations");
+});
+
+app.get("/locations/:id", async (req, res) => {
+  const { id } = req.params;
+  const location = await Location.findById(id);
+  res.render("locations/show", { location });
 });
 
 //homepage route

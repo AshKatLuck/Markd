@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markd</title>
+  </head>
+  <body>
+    <h1>All locations</h1>
+    <br />
+    <a href="/locations/new">Add new location</a>
+    <br />
+    <% for(let location of locations){ %>
+    <section>
+      <h2><a href="/locations/<%=location._id  %>"><%=location.title %></a></h2>
+      <p><%=location.city %>,<%=location.state %>,<%=location.country %></p>
+      <p>Date Visited:<%=location.dateOfVisit %></p>
+      <p>Description:<%=location.description %></p>
+      <p>Rating: <%=location.rating %></p>
+    </section>
+    <hr />
+    <% } %>
+  </body>
+</html>
