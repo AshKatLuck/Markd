@@ -7,6 +7,14 @@ const Location = require("./models/location");
 
 const app = express();
 
+//function to convert date js date object into mm-dd-yyyy format
+function formartDate(date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const year = String(date.getFullYear());
+  return `${year}-${month}-${day}`;
+}
+
 //set ejs engine
 app.use("ejs", enjineMate);
 //set views directory
@@ -55,7 +63,8 @@ app.post("/locations", async (req, res) => {
 app.get("/locations/:id/edit", async (req, res) => {
   const { id } = req.params;
   const location = await Location.findById(id);
-  res.render("locations/edit", { location });
+  const dateInHTMLFormat = formartDate(location.dateOfVisit);
+  res.render("locations/edit", { location, dateInHTMLFormat });
 });
 
 app.patch("/locations/:id", async (req, res) => {
