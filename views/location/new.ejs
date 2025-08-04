@@ -1,12 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Markd</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Add New Location</h1>
-    
-</body>
+    <form action="/location" method="post">
+      <div>
+        <label for="hasTravelled">Past travel</label>
+        <input
+          type="checkbox"
+          name="location[hasTravelled]"
+          id="hasTravelled"
+          value="yes"
+        />
+      </div>
+      <div>
+        <label for="title">Title of the location</label>
+        <input
+          type="text"
+          name="location[title]"
+          id="title"
+          placeholder="Title"
+        />
+      </div>
+      <div>
+        <label for="city">City</label>
+        <input type="text" name="location[city]" id="city" placeholder="City" />
+      </div>
+      <div>
+        <label for="state">State</label>
+        <input
+          type="text"
+          name="location[state]"
+          id="state"
+          placeholder="State"
+        />
+      </div>
+      <div>
+        <label for="country">Country</label>
+        <input
+          type="text"
+          name="location[country]"
+          id="country"
+          placeholder="Country"
+        />
+      </div>
+
+      <div>
+        <label for="dateOfVisit">Date of Visit</label>
+        <input type="date" name="location[dateOfVisit]" id="dateOfVisit" />
+      </div>
+
+      <div>
+        <label for="description">Description</label>
+        <textarea
+          name="location[description]"
+          id="description"
+          rows="4"
+          cols="30"
+        ></textarea>
+      </div>
+      <div>
+        <label for="rating">Rating</label>
+        <input type="number" name="location[rating]" id="rating" />
+      </div>
+
+      <div>
+        <button type="Submit">Submit</button>
+      </div>
+    </form>
+  </body>
 </html>
