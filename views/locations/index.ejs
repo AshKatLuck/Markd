@@ -1,11 +1,11 @@
 <% layout("layout/boilerplate") -%>
-<h1>All locations</h1>
-<br />
-<a href="/locations/new">Add new location</a>
-<br />
+<h1 class="display-4 text-center text-primary">All locations</h1>
+
 <% for(let location of locations){ %>
 <section>
-  <h2><a href="/locations/<%=location._id  %>"><%=location.title %></a></h2>
+  <h2 class="display-6">
+    <a href="/locations/<%=location._id  %>"><%=location.title %></a>
+  </h2>
   <p><%=location.city %>,<%=location.state %>,<%=location.country %></p>
   <p>Date Visited:<%=location.dateOfVisit %></p>
   <p>Description:<%=location.description %></p>
