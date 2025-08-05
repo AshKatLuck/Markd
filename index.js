@@ -9,10 +9,10 @@ const { dateForHTMLForm, convertToZ } = require("./utils/dateFunctions.js");
 const app = express();
 
 //set ejs engine
-app.use("ejs", enjineMate);
+app.engine("ejs", enjineMate);
 //set views directory
-app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
 //for getting form data from forms
 app.use(express.urlencoded({ extended: true }));

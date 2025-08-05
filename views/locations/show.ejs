@@ -1,27 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>Show induvidual location details</h1>
-    <section>
-      <h2><%=location.title %></h2>
-      <p><%=location.city %>,<%=location.state %>,<%=location.country %></p>
-      <p>Date Visited:<%=location.dateOfVisit %></p>
-      <p>Description:<%=location.description %></p>
-      <p>Rating: <%=location.rating %></p>
-    </section>
-    <a href="/locations/<%=location._id  %>/edit">Edit Location</a>
-    <br />
-    <form action="/locations/<%=location._id%>?_method=DELETE" method="post">
-      <button type="submit">Delete Location</button>
-    </form>
-    <br />
-    <a href="/locations">Back to all locations</a>
-    <br />
-    <a href="/locations/new">Add new location</a>
-  </body>
-</html>
+<% layout("./layout/boilerplate") -%>
+<h1>Show induvidual location details</h1>
+<section>
+  <h2><%=location.title %></h2>
+  <p><%=location.city %>,<%=location.state %>,<%=location.country %></p>
+  <p>Date Visited:<%=location.dateOfVisit %></p>
+  <p>Description:<%=location.description %></p>
+  <p>Rating: <%=location.rating %></p>
+</section>
+<a href="/locations/<%=location._id  %>/edit">Edit Location</a>
+<br />
+<form action="/locations/<%=location._id%>?_method=DELETE" method="post">
+  <button type="submit">Delete Location</button>
+</form>
+<br />
+<a href="/locations">Back to all locations</a>
+<br />
+<a href="/locations/new">Add new location</a>

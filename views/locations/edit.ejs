@@ -1,92 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Markd</title>
-  </head>
-  <body>
-    <h1>edit location</h1>
-    <form action="/locations/<%=location._id%>?_method=PATCH" method="post">
-      <div>
-        <label for="hasTravelled">Past travel</label>
-        <input type="checkbox" name="location[hasTravelled]" id="hasTravelled"
-        value=<%=(location.hasTravelled==true)?"yes":"" %> />
-      </div>
-      <div>
-        <label for="title">Title of the location</label>
-        <input
-          type="text"
-          name="location[title]"
-          id="title"
-          placeholder="Title"
-          value="<%=location.title  %>"
-        />
-      </div>
-      <div>
-        <label for="city">City</label>
-        <input
-          type="text"
-          name="location[city]"
-          id="city"
-          placeholder="City"
-          value="<%=location.city  %>"
-        />
-      </div>
-      <div>
-        <label for="state">State</label>
-        <input
-          type="text"
-          name="location[state]"
-          id="state"
-          placeholder="State"
-          value="<%=location.state %>"
-        />
-      </div>
-      <div>
-        <label for="country">Country</label>
-        <input
-          type="text"
-          name="location[country]"
-          id="country"
-          placeholder="Country"
-          value="<%=location.country  %>"
-        />
-      </div>
+<% layout("./layout/boilerplate") -%>
+<h1>edit location</h1>
+<form action="/locations/<%=location._id%>?_method=PATCH" method="post">
+  <div>
+    <label for="hasTravelled">Past travel</label>
+    <input type="checkbox" name="location[hasTravelled]" id="hasTravelled"
+    value=<%=(location.hasTravelled==true)?"yes":"" %> />
+  </div>
+  <div>
+    <label for="title">Title of the location</label>
+    <input
+      type="text"
+      name="location[title]"
+      id="title"
+      placeholder="Title"
+      value="<%=location.title  %>"
+    />
+  </div>
+  <div>
+    <label for="city">City</label>
+    <input
+      type="text"
+      name="location[city]"
+      id="city"
+      placeholder="City"
+      value="<%=location.city  %>"
+    />
+  </div>
+  <div>
+    <label for="state">State</label>
+    <input
+      type="text"
+      name="location[state]"
+      id="state"
+      placeholder="State"
+      value="<%=location.state %>"
+    />
+  </div>
+  <div>
+    <label for="country">Country</label>
+    <input
+      type="text"
+      name="location[country]"
+      id="country"
+      placeholder="Country"
+      value="<%=location.country  %>"
+    />
+  </div>
 
-      <div>
-        <label for="dateOfVisit">Date of Visit</label>
-        <input
-          type="date"
-          name="location[dateOfVisit]"
-          id="dateOfVisit"
-          value="<%=dateInHTMLFormat  %>"
-        />
-      </div>
-      <div>
-        <label for="description">Description</label>
-        <textarea
-          name="location[description]"
-          id="description"
-          rows="4"
-          cols="30"
-        >
+  <div>
+    <label for="dateOfVisit">Date of Visit</label>
+    <input
+      type="date"
+      name="location[dateOfVisit]"
+      id="dateOfVisit"
+      value="<%=dateInHTMLFormat  %>"
+    />
+  </div>
+  <div>
+    <label for="description">Description</label>
+    <textarea name="location[description]" id="description" rows="4" cols="30">
 <%=location.description  %></textarea
-        >
-      </div>
-      <div>
-        <label for="rating">Rating</label>
-        <input
-          type="number"
-          name="location[rating]"
-          id="rating"
-          value="<%=location.rating  %>"
-        />
-      </div>
+    >
+  </div>
+  <div>
+    <label for="rating">Rating</label>
+    <input
+      type="number"
+      name="location[rating]"
+      id="rating"
+      value="<%=location.rating  %>"
+    />
+  </div>
 
-      <div>
-        <button type="Submit">Edit</button>
-      </div>
-    </form>
-  </body>
-</html>
+  <div>
+    <button type="Submit">Edit</button>
+  </div>
+</form>
