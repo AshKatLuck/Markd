@@ -1,0 +1,20 @@
+//custom colors for primary and secondary
+$primary: #861657;
+$secondary: #ffe156;
+
+//To add other colors to our theme colors
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+
+//custom theme colors
+$custom-theme-colors: (
+  "fun": #ff66b3,
+  "lightfun": #f0f6f6,
+);
+
+//add the custom-theme-colors to bootstrap colors
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);
+
+//import bootstrap
+
+@import "../node_modules/bootstrap/scss/bootstrap";

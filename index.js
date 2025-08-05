@@ -19,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 //for delete and patch routes
 app.use(methodOverride("_method"));
 
+app.use(express.static("public"));
+
 //connect to the database
 const dburl = "mongodb://127.0.0.1:27017/markd";
 mongoose
