@@ -7,6 +7,7 @@ const Location = require("./models/location");
 const { dateForHTMLForm, convertToZ } = require("./utils/dateFunctions.js");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
+const { locationJoiSchema } = require("./utils/joiValidationSchema.js");
 
 const app = express();
 
@@ -35,6 +36,17 @@ mongoose
     console.error(err);
   });
 
+//joi validation
+const validateLocation = (req, res, next) => {
+  const { error } = locationJoiSchema.validate(req.body.location);
+  if (error) {
+    const msgs = error.details.map((el) => el.message);
+    return next(new ExpressError(msgs, 400));
+  } else {
+    next();
+  }
+};
+
 //location routes
 app.get(
   "/locations",
@@ -53,6 +65,7 @@ app.get("/locations/new", (req, res) => {
 
 app.post(
   "/locations",
+  validateLocation,
   catchAsync(async (req, res, next) => {
     const location = new Location(req.body.location);
 
@@ -61,9 +74,12 @@ app.post(
     } else {
       location.hasTravelled = false;
     }
+
     const date = new Date(location.dateOfVisit);
     const modifiedDate = convertToZ(date);
     location.dateOfVisit = modifiedDate;
+    console.log(location.dateOfVisit);
+    console.log(req.body.location.dateOfVisit);
 
     const r = await location.save();
     res.redirect(`/locations/${r._id}`);
@@ -86,6 +102,7 @@ app.get(
 
 app.patch(
   "/locations/:id",
+  validateLocation,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const editLocation = req.body.location;
