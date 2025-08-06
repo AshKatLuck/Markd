@@ -4,6 +4,7 @@
   action="/locations/<%=location._id%>?_method=PATCH"
   method="post"
   class="form"
+  id="myForm"
 >
   <div class="mb-3 form-check form-switch">
     <label for="hasTravelled" class="form-check-label">Past travel</label>
@@ -98,8 +99,18 @@
     >
       Submit
     </button>
-    <button id="clearBtn" class="btn btn-lg btn-secondary btnNew flex-grow-1">
+    <button
+      type="reset"
+      id="clearBtn"
+      onclick="clearForm()"
+      class="btn btn-lg btn-secondary btnNew flex-grow-1"
+    >
       Clear
     </button>
   </div>
 </form>
+<script>
+  function clearForm() {
+    document.getElementById("myForm").reset();
+  }
+</script>

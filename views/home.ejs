@@ -1,11 +1,82 @@
-<% layout('layout/boilerplate') -%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/main.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <title>Markd</title>
+  </head>
+  <body class="d-flex flex-column vh-100 mb-3">
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-none sticky-top"
+      data-bs-theme="dark"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"
+          ><img
+            src="/images/navLogo.png"
+            alt="Logo"
+            width="45"
+            height="36"
+            class="d-inline-block align-text-center"
+          />
+          Markd</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/locations"
+                >All Locations</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/locations/new"
+                >Add new location</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="row">
+      <div class="col col-md-8 offset-2">
+        <div
+          class="container vh-100 d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="matter">
+            <h1 class="text-center text-light heading">Markd</h1>
+            <h2 class="display-2 text-center text-light heading">
+              Let's pin one dream at a time
+            </h2>
+            <!-- <p class="fs-2 text-center para">
+              Markd is your personal travel journal powered by maps. Whether
+              you're a seasoned explorer or a dreaming planner, Markd lets you
+              mark the places you've visited and pin the ones still on your
+              bucket list.
+            </p> -->
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div class="container">
-  <h1 class="text-primary">Markd</h1>
-  <p>
-    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut blanditiis
-    quam, unde fuga aperiam dolorum veritatis repudiandae illum id recusandae
-    eligendi, repellendus quia! Deleniti earum officiis eligendi quis.
-    Explicabo, quas.
-  </p>
-</div>
+    <script src="/javascript/bootstrap.min.js"></script>
+    <script src="/javascript/popper.min.js"></script>
+  </body>
+</html>

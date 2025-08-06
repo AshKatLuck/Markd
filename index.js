@@ -61,6 +61,7 @@ app.post("/locations", async (req, res) => {
 
 app.get("/locations/:id/edit", async (req, res) => {
   const { id } = req.params;
+
   const location = await Location.findById(id);
   const dateInHTMLFormat = dateForHTMLForm(location.dateOfVisit);
   res.render("locations/edit", { location, dateInHTMLFormat });
