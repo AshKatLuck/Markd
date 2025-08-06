@@ -5,6 +5,8 @@ const enjineMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const Location = require("./models/location");
 const { dateForHTMLForm, convertToZ } = require("./utils/dateFunctions.js");
+const ExpressError = require("./utils/ExpressError");
+const catchAsync = require("./utils/catchAsync");
 
 const app = express();
 
@@ -34,83 +36,123 @@ mongoose
   });
 
 //location routes
-app.get("/locations", async (req, res) => {
-  const locations = await Location.find({});
-  res.render("locations/index", { locations });
-});
+app.get(
+  "/locations",
+  catchAsync(async (req, res, next) => {
+    const locations = await Location.find({});
+    if (!locations) {
+      return next();
+    }
+    res.render("locations/index", { locations });
+  })
+);
 
 app.get("/locations/new", (req, res) => {
   res.render("locations/new");
 });
 
-app.post("/locations", async (req, res) => {
-  const location = new Location(req.body.location);
+app.post(
+  "/locations",
+  catchAsync(async (req, res, next) => {
+    const location = new Location(req.body.location);
 
-  if (location.hasTravelled) {
-    location.hasTravelled = true;
-  } else {
-    location.hasTravelled = false;
-  }
-  const date = new Date(location.dateOfVisit);
-  const modifiedDate = convertToZ(date);
-  location.dateOfVisit = modifiedDate;
+    if (location.hasTravelled) {
+      location.hasTravelled = true;
+    } else {
+      location.hasTravelled = false;
+    }
+    const date = new Date(location.dateOfVisit);
+    const modifiedDate = convertToZ(date);
+    location.dateOfVisit = modifiedDate;
 
-  const r = await location.save();
-  res.redirect(`/locations/${r._id}`);
-});
+    const r = await location.save();
+    res.redirect(`/locations/${r._id}`);
+  })
+);
 
-app.get("/locations/:id/edit", async (req, res) => {
-  const { id } = req.params;
+app.get(
+  "/locations/:id/edit",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
 
-  const location = await Location.findById(id);
-  const dateInHTMLFormat = dateForHTMLForm(location.dateOfVisit);
-  res.render("locations/edit", { location, dateInHTMLFormat });
-});
+    const location = await Location.findById(id);
+    if (!location) {
+      return next();
+    }
+    const dateInHTMLFormat = dateForHTMLForm(location.dateOfVisit);
+    res.render("locations/edit", { location, dateInHTMLFormat });
+  })
+);
 
-app.patch("/locations/:id", async (req, res) => {
-  const { id } = req.params;
-  const editLocation = req.body.location;
-  if (editLocation.hasTravelled) {
-    editLocation.hasTravelled = true;
-  } else {
-    editLocation.hasTravelled = false;
-  }
-  const date = new Date(editLocation.dateOfVisit);
-  const modifiedDate = convertToZ(date);
-  //   console.log("date:", date);
-  //   console.log("modifiedDate:", modifiedDate);
-  editLocation.dateOfVisit = modifiedDate;
-  //   console.log("editLocation", editLocation);
+app.patch(
+  "/locations/:id",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const editLocation = req.body.location;
+    if (editLocation.hasTravelled) {
+      editLocation.hasTravelled = true;
+    } else {
+      editLocation.hasTravelled = false;
+    }
+    const date = new Date(editLocation.dateOfVisit);
+    const modifiedDate = convertToZ(date);
+    editLocation.dateOfVisit = modifiedDate;
+    const location = await Location.findByIdAndUpdate(
+      { _id: id },
+      { ...editLocation },
+      { runValidators: true }
+    );
+    if (!location) {
+      return next();
+    }
+    res.redirect(`/locations/${location._id}`);
+  })
+);
 
-  const location = await Location.findByIdAndUpdate(
-    { _id: id },
-    { ...editLocation },
-    { runValidators: true }
-  );
-  //   console.log("location", location);
-  res.redirect(`/locations/${location._id}`);
-});
+app.delete(
+  "/locations/:id",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const result = await Location.findByIdAndDelete({ _id: id });
+    if (!result) {
+      return next();
+    }
+    //   console.log(result);
+    res.redirect("/locations");
+  })
+);
 
-app.delete("/locations/:id", async (req, res) => {
-  const { id } = req.params;
-  const result = await Location.findByIdAndDelete({ _id: id });
-  //   console.log(result);
-  res.redirect("/locations");
-});
-
-app.get("/locations/:id", async (req, res) => {
-  const { id } = req.params;
-  const location = await Location.findById(id);
-  //   const date = new Date(location.dateOfVisit);
-  //   const offset = date.getTimezoneOffset();
-  //   const dateToDisplay = date + offset;
-  //   console.log(dateToDisplay);
-  res.render("locations/show", { location });
-});
+app.get(
+  "/locations/:id",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const location = await Location.findById(id);
+    if (!location) {
+      return next();
+    }
+    res.render("locations/show", { location });
+  })
+);
 
 //homepage route
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.all(/(.*)/, (req, res, next) => {
+  // console.log("in app.all");
+  next(new ExpressError("Page not found", 404));
+});
+
+app.use((err, req, res, next) => {
+  // console.log("last app.use error handler");
+  // console.log(err);
+  const { statusCode = 500, message } = err;
+  if (!err.message) {
+    err.message = "Something Went Wrong!";
+  }
+  // console.log(err.message, err.statusCode);
+  res.status(statusCode).render("error", { err });
 });
 
 app.listen(3000, () => {
