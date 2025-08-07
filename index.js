@@ -3,16 +3,24 @@ const mongoose = require("mongoose");
 const path = require("path");
 const enjineMate = require("ejs-mate");
 const methodOverride = require("method-override");
-// const Location = require("./models/location");
-// const Landmark = require("./models/landmark.js");
-// const { dateForHTMLForm, convertToZ } = require("./utils/dateFunctions.js");
 const ExpressError = require("./utils/ExpressError");
-// const catchAsync = require("./utils/catchAsync");
-// const { locationJoiSchema } = require("./utils/joiValidationSchema.js");
 const locationRouter = require("./routes/locations.js");
 const landmarkRouter = require("./routes/landmarks.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const app = express();
+
+const sessionCofig = {
+  secret: "thisisasecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 27 * 7,
+  },
+};
 
 //set ejs engine
 app.engine("ejs", enjineMate);
@@ -25,7 +33,19 @@ app.use(express.urlencoded({ extended: true }));
 //for delete and patch routes
 app.use(methodOverride("_method"));
 
+//declaring public directory
 app.use(express.static("public"));
+
+app.use(session(sessionCofig));
+app.use(flash());
+
+//middleware to set the success and error variables so that they are available to all pages
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.deletion = req.flash("deletion");
+  res.locals.error = req.flash("error");
+  next();
+});
 
 //connect to the database
 const dburl = "mongodb://127.0.0.1:27017/markd";
@@ -203,6 +223,7 @@ app.use((err, req, res, next) => {
     err.message = "Something Went Wrong!";
   }
   // console.log(err.message, err.statusCode);
+
   res.status(statusCode).render("error", { err });
 });
 

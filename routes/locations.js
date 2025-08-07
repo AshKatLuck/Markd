@@ -24,6 +24,7 @@ router
     catchAsync(async (req, res, next) => {
       const locations = await Location.find({});
       if (!locations) {
+        req.flash("error", "No locations found");
         return next();
       }
       res.render("locations/index", { locations });
@@ -47,6 +48,7 @@ router
       console.log(req.body.location.dateOfVisit);
 
       const r = await location.save();
+      req.flash("success", "location added succesfully!");
       res.redirect(`/locations/${r._id}`);
     })
   );
@@ -64,6 +66,7 @@ router
       // console.log("landmarks", landmarks);
       const location = await Location.findById(id);
       if (!location) {
+        req.flash("error", "Location not found");
         return next();
       }
       res.render("locations/show", { location, landmarks });
@@ -76,9 +79,10 @@ router
       // console.log("landmarks deleted", landmarksdeleted);
       const result = await Location.findByIdAndDelete({ _id: id });
       if (!result) {
+        req.flash("error", "Location not found");
         return next();
       }
-      //   console.log(result);
+      req.flash("deletion", `successfully deleted the location!`);
       res.redirect("/locations");
     })
   )
@@ -101,8 +105,10 @@ router
         { runValidators: true }
       );
       if (!location) {
+        req.flash("error", "Location not found");
         return next();
       }
+      req.flash("success", `succesfully updated ${location.title}!`);
       res.redirect(`/locations/${location._id}`);
     })
   );
@@ -113,6 +119,7 @@ router.route("/:id/edit").get(
 
     const location = await Location.findById(id);
     if (!location) {
+      req.flash("error", "Location not found");
       return next();
     }
     const dateInHTMLFormat = dateForHTMLForm(location.dateOfVisit);

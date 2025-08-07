@@ -11,6 +11,7 @@ router.route("/:id/landmarks").post(
     // console.log(landmark);
     const result = await landmark.save();
     // console.log("result", result);
+    req.flash("success", `succesfully added ${landmark.name} to the location!`);
     res.redirect(`/locations/${id}`);
   })
 );
@@ -19,7 +20,12 @@ router.route("/:id/landmarks/:landmarkId").delete(
   catchAsync(async (req, res, next) => {
     const { id, landmarkId } = req.params;
     const result = await Landmark.findByIdAndDelete({ _id: landmarkId });
+    if (!result) {
+      req.flash("error", "Landmark not found");
+      return next();
+    }
     // console.log(result);
+    req.flash("deletion", `succesfully deleted the landmark!`);
     res.redirect(`/locations/${id}`);
   })
 );
