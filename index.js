@@ -109,7 +109,7 @@ app.post(
     const landmark = new Landmark({ name: name, location: id });
     // console.log(landmark);
     const result = await landmark.save();
-    console.log("result", result);
+    // console.log("result", result);
     res.redirect(`/locations/${id}`);
   })
 );
