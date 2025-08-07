@@ -1,32 +1,135 @@
 <% layout("./layout/boilerplate") -%>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card m-5">
+      <img src="<%=location.picture  %>" class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title display-5 mb-3 text-center">
+          <%=location.title %>
+        </h5>
+        <p class="card-text"></p>
+        <p class="mb-2 text-muted">
+          <%=location.city %>,<%=location.state %>,<%=location.country %>
+        </p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <p><%=location.description %></p>
+        </li>
+        <li class="list-group-item">
+          <p>Visited On <%=location.dateOfVisit %></p>
+        </li>
+        <li class="list-group-item"><p>Rating: <%=location.rating %></p></li>
+      </ul>
+      <div class="card-body">
+        <!-- <a href="#" class="card-link">Card link</a>
+    <a href="#" class="card-link">Another link</a> -->
+        <div
+          class="d-flex align-items-center justify-content-center mb-4 card-link"
+        >
+          <a
+            class="btn btn-lg btn-success me-2 w-50"
+            href="/locations/<%=location._id  %>/edit"
+            >Edit Location</a
+          >
+          <br />
+          <form
+            action="/locations/<%=location._id%>?_method=DELETE"
+            method="post"
+            class="w-50"
+          >
+            <button
+              type="submit"
+              class="btn btn-lg btn-danger btnNew w-100 card-link"
+            >
+              Delete Location
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<section>
-  <h2 class="display-4 mb-3"><%=location.title %></h2>
-  <p class="mb-2 text-muted">
-    <%=location.city %>,<%=location.state %>,<%=location.country %>
-  </p>
-  <p>Date Visited:<%=location.dateOfVisit %></p>
-  <p>Description:<%=location.description %></p>
-  <p>Rating: <%=location.rating %></p>
-</section>
-<div class="d-flex align-items-center justify-content-center mb-4">
-  <a
-    class="btn btn-lg btn-success me-2 w-50"
-    href="/locations/<%=location._id  %>/edit"
-    >Edit Location</a
-  >
-  <br />
-  <form
-    action="/locations/<%=location._id%>?_method=DELETE"
-    method="post"
-    class="w-50"
-  >
-    <button type="submit" class="btn btn-lg btn-danger btnNew w-100">
-      Delete Location
-    </button>
-  </form>
+  <div class="col-md-6">
+    <form
+      action="/locations/<%=location._id%>/landmarks"
+      class="form needs-validation m-5"
+      method="post"
+      novalidate
+    >
+      <div class="mb-3 form-floating">
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          id="landmark"
+          placeholder="Landmark"
+          required
+        />
+        <label for="landmark" class="form-label">Add Landmark</label>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="mb-3 d-flex align-items-center justify-content-center">
+        <button
+          type="Submit"
+          class="btn btn-lg btn-primary btnNew me-2 flex-grow-1"
+        >
+          +Add
+        </button>
+      </div>
+    </form>
+    <div class="m-5">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title text-primary text-center">
+            <%=(location.hasTravelled)?"Landmarks Visited":"Landmarks to Visit"
+            %>
+          </h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <% for(let landmark of landmarks){ %>
+
+          <li class="list-group-item d-flex flex-column">
+            <div class="row">
+              <div class="col-10"><span><%=landmark.name %></span></div>
+              <div class="col-2">
+                <form
+                  action="/locations/<%=location._id%>/landmarks/<%=landmark._id%>?_method=DELETE"
+                  method="post"
+                  class="form form-inline novalidate needs-validation d-flex flex-column"
+                >
+                  <button class="btn btn-danger" type="submit">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.5rem"
+                      height="1.5rem"
+                      fill="currentColor"
+                      class="bi bi-trash"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                      />
+                      <path
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                      />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </li>
+
+          <% } %>
+          <!-- <li class="list-group-item">An item</li>
+          <li class="list-group-item">A second item</li>
+          <li class="list-group-item">A third item</li> -->
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
-<a href="/locations">Back to all locations</a>
+<!-- <a href="/locations">Back to all locations</a>
 <br />
-<a href="/locations/new">Add new location</a>
+<a href="/locations/new">Add new location</a> -->

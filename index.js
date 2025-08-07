@@ -4,6 +4,7 @@ const path = require("path");
 const enjineMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const Location = require("./models/location");
+const Landmark = require("./models/landmark.js");
 const { dateForHTMLForm, convertToZ } = require("./utils/dateFunctions.js");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
@@ -99,6 +100,29 @@ app.get(
     res.render("locations/edit", { location, dateInHTMLFormat });
   })
 );
+//landmarks route
+app.post(
+  "/locations/:id/landmarks",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    const landmark = new Landmark({ name: name, location: id });
+    // console.log(landmark);
+    const result = await landmark.save();
+    console.log("result", result);
+    res.redirect(`/locations/${id}`);
+  })
+);
+
+app.delete(
+  "/locations/:id/landmarks/:landmarkId",
+  catchAsync(async (req, res, next) => {
+    const { id, landmarkId } = req.params;
+    const result = await Landmark.findByIdAndDelete({ _id: landmarkId });
+    // console.log(result);
+    res.redirect(`/locations/${id}`);
+  })
+);
 
 app.patch(
   "/locations/:id",
@@ -130,6 +154,8 @@ app.delete(
   "/locations/:id",
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
+    const landmarksdeleted = await Landmark.deleteMany({ location: id });
+    // console.log("landmarks deleted", landmarksdeleted);
     const result = await Location.findByIdAndDelete({ _id: id });
     if (!result) {
       return next();
@@ -143,11 +169,13 @@ app.get(
   "/locations/:id",
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
+    const landmarks = await Landmark.find({ location: id });
+    // console.log("landmarks", landmarks);
     const location = await Location.findById(id);
     if (!location) {
       return next();
     }
-    res.render("locations/show", { location });
+    res.render("locations/show", { location, landmarks });
   })
 );
 

@@ -21,6 +21,9 @@ const locationSchema = new Schema({
     type: String,
     required: true,
   },
+  picture: {
+    type: String,
+  },
   dateOfVisit: Date,
   description: String,
   rating: {

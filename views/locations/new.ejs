@@ -1,129 +1,154 @@
 <% layout("./layout/boilerplate") -%>
-<h1 class="display-4 text-center mb-3">Add New Location</h1>
-<form
-  action="/locations"
-  method="post"
-  class="form needs-validation"
-  id="myForm"
-  novalidate
->
-  <div class="mb-3 form-check form-switch">
-    <label for="hasTravelled" class="form-check-label">Past travel</label>
-    <input
-      type="checkbox"
-      name="location[hasTravelled]"
-      id="hasTravelled"
-      value="yes"
-      class="form-check-input"
-      role="switch"
-    />
-    <div class="valid-feedback">Looks good!</div>
-    <div class="invalid-feedback">Please provide a title.</div>
-  </div>
-  <div class="mb-3">
-    <label for="title" class="form-label">Title of the location</label>
-    <input
-      type="text"
-      class="form-control"
-      name="location[title]"
-      id="title"
-      placeholder="Title"
-      required
-    />
-    <div class="valid-feedback">Looks good!</div>
-  </div>
 
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="form-group mb-3 flex-grow-1">
-      <label for="city" class="form-label">City</label>
-      <input
-        type="text"
-        class="form-control"
-        name="location[city]"
-        id="city"
-        placeholder="City"
-        required
-      />
-      <div class="valid-feedback">Looks good!</div>
-    </div>
-    <div class="form-group ms-sm-3 mb-3 flex-grow-1">
-      <label for="state" class="form-label">State</label>
-      <input
-        type="text"
-        class="form-control"
-        name="location[state]"
-        id="state"
-        placeholder="State"
-        required
-      />
-      <div class="valid-feedback">Looks good!</div>
-    </div>
-    <div class="form-group ms-sm-3 mb-3 flex-grow-1">
-      <label for="country" class="form-label">Country</label>
-      <input
-        type="text"
-        name="location[country]"
-        id="country"
-        placeholder="Country"
-        class="form-control"
-        required
-      />
-      <div class="valid-feedback">Looks good!</div>
-    </div>
-  </div>
+<div class="row">
+  <div class="col col-6 offset-3">
+    <main class="container mt-5">
+      <section>
+        <h1 class="display-4 text-center mb-3">Add New Location</h1>
+        <form
+          action="/locations"
+          method="post"
+          class="form needs-validation"
+          id="myForm"
+          novalidate
+        >
+          <div class="mb-3 form-check form-switch">
+            <label for="hasTravelled" class="form-check-label"
+              >Past travel</label
+            >
+            <input
+              type="checkbox"
+              name="location[hasTravelled]"
+              id="hasTravelled"
+              value="yes"
+              class="form-check-input"
+              role="switch"
+            />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please provide a title.</div>
+          </div>
+          <div class="mb-3">
+            <label for="title" class="form-label">Title of the location</label>
+            <input
+              type="text"
+              class="form-control"
+              name="location[title]"
+              id="title"
+              placeholder="Title"
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
 
-  <div class="mb-3">
-    <label for="dateOfVisit" class="form-label">Date of Visit</label>
-    <input
-      type="date"
-      class="form-control"
-      name="location[dateOfVisit]"
-      id="dateOfVisit"
-      required
-    />
-    <div class="valid-feedback">Looks good!</div>
-  </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="form-group mb-3 flex-grow-1">
+              <label for="city" class="form-label">City</label>
+              <input
+                type="text"
+                class="form-control"
+                name="location[city]"
+                id="city"
+                placeholder="City"
+                required
+              />
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+            <div class="form-group ms-sm-3 mb-3 flex-grow-1">
+              <label for="state" class="form-label">State</label>
+              <input
+                type="text"
+                class="form-control"
+                name="location[state]"
+                id="state"
+                placeholder="State"
+                required
+              />
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+            <div class="form-group ms-sm-3 mb-3 flex-grow-1">
+              <label for="country" class="form-label">Country</label>
+              <input
+                type="text"
+                name="location[country]"
+                id="country"
+                placeholder="Country"
+                class="form-control"
+                required
+              />
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          </div>
 
-  <div class="mb-3">
-    <label for="description" class="form-label">Description</label>
-    <textarea
-      name="location[description]"
-      id="description"
-      rows="4"
-      cols="30"
-      class="form-control"
-    ></textarea>
-    <div class="valid-feedback">Looks good!</div>
-  </div>
-  <div class="mb-3">
-    <label for="rating" class="form-label">Rating</label>
-    <input
-      type="range"
-      class="form-range"
-      name="location[rating]"
-      id="rating"
-      min="1"
-      max="5"
-    />
-  </div>
+          <div class="mb-3">
+            <label for="picture" class="form-label">Photo(url)</label>
+            <input
+              type="text"
+              name="location[picture]"
+              id="picture"
+              placeholder="url of photo"
+              class="form-control"
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
 
-  <div class="mb-3 d-flex align-items-center justify-content-center">
-    <button
-      type="Submit"
-      class="btn btn-lg btn-primary btnNew me-2 flex-grow-1"
-    >
-      Submit
-    </button>
-    <button
-      type="reset"
-      onclick="clearForm()"
-      id="clearBtn"
-      class="btn btn-lg btn-secondary btnNew flex-grow-1"
-    >
-      Clear
-    </button>
+          <div class="mb-3">
+            <label for="dateOfVisit" class="form-label">Date of Visit</label>
+            <input
+              type="date"
+              class="form-control"
+              name="location[dateOfVisit]"
+              id="dateOfVisit"
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              name="location[description]"
+              id="description"
+              rows="4"
+              cols="30"
+              class="form-control"
+            ></textarea>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <input
+              type="range"
+              class="form-range"
+              name="location[rating]"
+              id="rating"
+              min="1"
+              max="5"
+            />
+          </div>
+
+          <div class="mb-3 d-flex align-items-center justify-content-center">
+            <button
+              type="Submit"
+              class="btn btn-lg btn-primary btnNew me-2 flex-grow-1"
+            >
+              Submit
+            </button>
+            <button
+              type="reset"
+              onclick="clearForm()"
+              id="clearBtn"
+              class="btn btn-lg btn-secondary btnNew flex-grow-1"
+            >
+              Clear
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
   </div>
-</form>
+</div>
+
 <script>
   function clearForm() {
     document.getElementById("myForm").reset();

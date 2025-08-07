@@ -1,15 +1,32 @@
 <% layout("layout/boilerplate") -%>
-<h1 class="display-4 text-center text-primary">All locations</h1>
 
-<% for(let location of locations){ %>
-<section>
-  <h2 class="display-6">
-    <a href="/locations/<%=location._id  %>"><%=location.title %></a>
-  </h2>
-  <p><%=location.city %>,<%=location.state %>,<%=location.country %></p>
-  <p>Date Visited:<%=location.dateOfVisit %></p>
-  <p>Description:<%=location.description %></p>
-  <p>Rating: <%=location.rating %></p>
-</section>
-<hr />
-<% } %>
+<div class="row">
+  <div class="col col-8 offset-2">
+    <main class="container mt-5">
+      <section>
+        <h1 class="display-5 text-center text-primary mb-5">All locations</h1>
+
+        <% for(let location of locations){ %>
+        <section>
+          <div class="row border-bottom mb-2 pb-2">
+            <div class="col-md-5">
+              <img class="img-fluid" src="<%=location.picture  %>" alt="" />
+            </div>
+            <div class="col-md-7">
+              <h2>
+                <a href="/locations/<%=location._id  %>"
+                  ><%=location.title %></a
+                >
+              </h2>
+              <p>
+                <%=location.city %>,<%=location.state %>,<%=location.country %>
+              </p>
+              <p>Rating: <%=location.rating %></p>
+            </div>
+          </div>
+        </section>
+        <% } %>
+      </section>
+    </main>
+  </div>
+</div>
