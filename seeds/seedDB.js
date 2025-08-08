@@ -47,6 +47,16 @@ const imageUrls = [
   "https://images.unsplash.com/photo-1484271516638-5de1a7e7e5e8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 ];
 
+const userIds = [
+  "68962af22295c870803e5d59",
+  "68962add2295c870803e5d52",
+  "68962ac82295c870803e5d4b",
+  "689523a8e1600ab25c60587c",
+  "689522e60d6f82b06503a96b",
+  "689519a1b79e0a8bf15b9703",
+  "689517db5d308953976c8f98",
+];
+
 const seedDB = async (req, res) => {
   const start = new Date(2020, 0, 1);
   const end = new Date(2030, 12, 31);
@@ -57,6 +67,7 @@ const seedDB = async (req, res) => {
   for (let i = 0; i < 50; i++) {
     const dateOfVisit = generateRandomDate(start, end);
     const today = new Date();
+    let userId = randomizer(userIds);
     hasTravelled = dateOfVisit <= today ? true : false;
     let title = randomizer(descriptors) + " " + randomizer(places);
     let cityObject = randomizer(cities);
@@ -70,6 +81,7 @@ const seedDB = async (req, res) => {
     let rating = Math.floor(Math.random() * 5) + 1;
     let picture = randomizer(imageUrls);
     const location = {
+      userId,
       hasTravelled,
       title,
       city,

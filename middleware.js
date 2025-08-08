@@ -1,22 +1,38 @@
+const Location = require("./models/location");
+const ExpressError = require("./utils/ExpressError");
 module.exports.isLoggedIn = async (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
-    console.log(req.originalUrl, req.session.returnTo);
+    // console.log(req.originalUrl, req.session.returnTo);
     req.flash("error", "You must be signed in");
     res.redirect("/login");
   } else {
-    console.log("user is", req.user);
+    // console.log("user is", req.user);
     next();
   }
 };
 
 module.exports.storeReturnTo = (req, res, next) => {
   if (req.session.returnTo) {
-    console.log("storeReturnTo,", req.session.returnTo);
+    // console.log("storeReturnTo,", req.session.returnTo);
     const originalPath = req.session.returnTo;
     const path = originalPath.replace("/landmarks", "");
     res.locals.returnTo = path;
-    console.log("path:", path);
+    // console.log("path:", path);
+  }
+  next();
+};
+
+module.exports.isAuthor = async (req, res, next) => {
+  const { id } = req.params;
+  const location = await Location.findById(id);
+  const flag =
+    JSON.stringify(location.userId) ===
+    JSON.stringify(res.locals.currentUser._id);
+  if (!flag) {
+    res.locals.returnTo = "/login";
+    req.flash("error", "Access denied");
+    return next(new ExpressError("Access denied", 403));
   }
   next();
 };

@@ -1,6 +1,7 @@
 const Joi = require("joi");
 
 module.exports.locationJoiSchema = Joi.object({
+  userId: Joi.string().required(),
   title: Joi.string().required(),
   city: Joi.string().required(),
   state: Joi.string().required(),

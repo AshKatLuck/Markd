@@ -7,6 +7,8 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.4);
+  height: fit-content;
+  overflow: hidden;
 }
 
 h1.heading {

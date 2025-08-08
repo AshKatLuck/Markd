@@ -45,7 +45,7 @@ router
       failureRedirect: "/login",
     }),
     (req, res, next) => {
-      console.log("login post", res.locals.returnTo);
+      //   console.log("login post", res.locals.returnTo);
       const redirectUrl = res.locals.returnTo || "/locations";
       req.flash("success", "Welcome back");
       res.redirect(redirectUrl);
@@ -58,7 +58,7 @@ router.route("/logout").get(isLoggedIn, (req, res, next) => {
       return next(err);
     }
     req.flash("success", "Bye bye bye");
-    res.redirect("/locations");
+    res.redirect("/");
   });
 });
 module.exports = router;

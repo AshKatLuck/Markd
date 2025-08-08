@@ -6,11 +6,14 @@ const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const { locationJoiSchema } = require("../utils/joiValidationSchema");
 const { dateForHTMLForm, convertToZ } = require("../utils/dateFunctions");
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn, isAuthor } = require("../middleware");
 
 //joi validation
 const validateLocation = (req, res, next) => {
-  const { error } = locationJoiSchema.validate(req.body.location);
+  const location = req.body.location;
+  const userId = res.locals.currentUser._id.toString();
+  location.userId = userId;
+  const { error } = locationJoiSchema.validate(location);
   if (error) {
     const msgs = error.details.map((el) => el.message);
     return next(new ExpressError(msgs, 400));
@@ -22,8 +25,11 @@ const validateLocation = (req, res, next) => {
 router
   .route("/")
   .get(
+    isLoggedIn,
     catchAsync(async (req, res, next) => {
-      const locations = await Location.find({});
+      const user = res.locals.currentUser;
+      // console.log(user);
+      const locations = await Location.find({ userId: user._id });
       if (!locations) {
         req.flash("error", "No locations found");
         return next();
@@ -35,7 +41,9 @@ router
     isLoggedIn,
     validateLocation,
     catchAsync(async (req, res, next) => {
+      let userId = res.locals.currentUser._id;
       const location = new Location(req.body.location);
+      location.userId = userId;
 
       if (location.hasTravelled) {
         location.hasTravelled = true;
@@ -46,8 +54,10 @@ router
       const date = new Date(location.dateOfVisit);
       const modifiedDate = convertToZ(date);
       location.dateOfVisit = modifiedDate;
-      console.log(location.dateOfVisit);
-      console.log(req.body.location.dateOfVisit);
+      location.userId = res.locals.currentUser._id;
+      console.log(location.userId, res.locals.currentUser);
+      // console.log(location.dateOfVisit);
+      // console.log(req.body.location.dateOfVisit);
 
       const r = await location.save();
       req.flash("success", "location added succesfully!");
@@ -62,11 +72,28 @@ router.route("/new").get(isLoggedIn, (req, res) => {
 router
   .route("/:id")
   .get(
+    isLoggedIn,
+    isAuthor,
     catchAsync(async (req, res, next) => {
       const { id } = req.params;
+      const location = await Location.findById(id);
+      // const flag =
+      //   JSON.stringify(location.userId) ===
+      //   JSON.stringify(res.locals.currentUser._id);
+      // if (!flag) {
+      //   req.flash("error", "Access denied");
+      //   return next(new ExpressError("Access denied", 403));
+      // }
       const landmarks = await Landmark.find({ location: id });
       // console.log("landmarks", landmarks);
-      const location = await Location.findById(id);
+
+      // console.log("flag", flag);
+      // console.log("location.userId", JSON.stringify(location.userId));
+      // console.log(
+      //   "res.locals.currentUser._id",
+      //   JSON.stringify(res.locals.currentUser._id)
+      // );
+
       if (!location) {
         req.flash("error", "Location not found");
         return next();
@@ -76,6 +103,7 @@ router
   )
   .delete(
     isLoggedIn,
+    isAuthor,
     catchAsync(async (req, res, next) => {
       const { id } = req.params;
       const landmarksdeleted = await Landmark.deleteMany({ location: id });
@@ -91,6 +119,7 @@ router
   )
   .patch(
     isLoggedIn,
+    isAuthor,
     validateLocation,
     catchAsync(async (req, res, next) => {
       const { id } = req.params;
@@ -119,6 +148,7 @@ router
 
 router.route("/:id/edit").get(
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
 
