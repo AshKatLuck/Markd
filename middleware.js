@@ -1,5 +1,7 @@
 const Location = require("./models/location");
 const ExpressError = require("./utils/ExpressError");
+const { locationJoiSchema } = require("./utils/joiValidationSchema");
+
 module.exports.isLoggedIn = async (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
@@ -35,4 +37,18 @@ module.exports.isAuthor = async (req, res, next) => {
     return next(new ExpressError("Access denied", 403));
   }
   next();
+};
+
+//joi validation
+module.exports.validateLocation = (req, res, next) => {
+  const location = req.body.location;
+  const userId = res.locals.currentUser._id.toString();
+  location.userId = userId;
+  const { error } = locationJoiSchema.validate(location);
+  if (error) {
+    const msgs = error.details.map((el) => el.message);
+    return next(new ExpressError(msgs, 400));
+  } else {
+    next();
+  }
 };
