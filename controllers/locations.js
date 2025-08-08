@@ -29,7 +29,7 @@ module.exports.createLocation = async (req, res, next) => {
   const modifiedDate = convertToZ(date);
   location.dateOfVisit = modifiedDate;
   location.userId = res.locals.currentUser._id;
-  console.log(location.userId, res.locals.currentUser);
+  // console.log(location.userId, res.locals.currentUser);
   // console.log(location.dateOfVisit);
   // console.log(req.body.location.dateOfVisit);
 

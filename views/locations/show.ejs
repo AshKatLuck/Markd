@@ -1,4 +1,6 @@
 <% layout("./layout/boilerplate") -%>
+<link rel="stylesheet" href="/css/star.css" />
+
 <div class="row">
   <div class="col-md-6">
     <div class="card m-5">
@@ -19,7 +21,14 @@
         <li class="list-group-item">
           <p>Visited On <%=location.dateOfVisit %></p>
         </li>
-        <li class="list-group-item"><p>Rating: <%=location.rating %></p></li>
+        <li class="list-group-item">
+          <p
+            class="starability-result card-title"
+            data-rating="<%=location.rating  %>"
+          >
+            Rated: <%=location.rating %>
+          </p>
+        </li>
       </ul>
       <div class="card-body">
         <!-- <a href="#" class="card-link">Card link</a>

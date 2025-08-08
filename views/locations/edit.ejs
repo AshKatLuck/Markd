@@ -1,4 +1,5 @@
 <% layout("./layout/boilerplate") -%>
+<link rel="stylesheet" href="/css/star.css" />
 
 <div class="row">
   <div class="col col-6 offset-3">
@@ -99,15 +100,61 @@
 <%=location.description  %></textarea
             >
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="rating" class="form-label">Rating</label>
             <input
               type="number"
               name="location[rating]"
               id="rating"
               class="form-control"
-              value="<%=location.rating  %>"
+              value="
             />
+          </div> -->
+
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating:</label>   
+            <fieldset class="starability-basic mt-3" id="rating">
+              <input
+                type="radio"
+                id="first-rate1"
+                name="location[rating]"
+                value="1"
+                <%=(location.rating==1)?"checked":""  %>
+              />
+              <label for="first-rate1" title="Terrible">1 star</label>
+              <input
+                type="radio"
+                id="first-rate2"
+                name="location[rating]"
+                value="2"
+                <%=(location.rating==2)?"checked":""  %>
+              />
+              <label for="first-rate2" title="Not good">2 stars</label>
+              <input
+                type="radio"
+                id="first-rate3"
+                name="location[rating]"
+                value="3"
+                <%=(location.rating==3)?"checked":""  %>
+              />
+              <label for="first-rate3" title="Average">3 stars</label>
+              <input
+                type="radio"
+                id="first-rate4"
+                name="location[rating]"
+                value="4"
+                <%=(location.rating==4)?"checked":""  %>
+              />
+              <label for="first-rate4" title="Very good">4 stars</label>
+              <input
+                type="radio"
+                id="first-rate5"
+                name="location[rating]"
+                value="5"
+                <%=(location.rating==5)?"checked":""  %>
+              />
+              <label for="first-rate5" title="Amazing">5 stars</label>
+            </fieldset>   
           </div>
 
           <div class="mb-3 d-flex align-items-center justify-content-center">
