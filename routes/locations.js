@@ -6,6 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const { locationJoiSchema } = require("../utils/joiValidationSchema");
 const { dateForHTMLForm, convertToZ } = require("../utils/dateFunctions");
+const { isLoggedIn } = require("../middleware");
 
 //joi validation
 const validateLocation = (req, res, next) => {
@@ -31,6 +32,7 @@ router
     })
   )
   .post(
+    isLoggedIn,
     validateLocation,
     catchAsync(async (req, res, next) => {
       const location = new Location(req.body.location);
@@ -53,7 +55,7 @@ router
     })
   );
 
-router.route("/new").get((req, res) => {
+router.route("/new").get(isLoggedIn, (req, res) => {
   res.render("locations/new");
 });
 
@@ -73,6 +75,7 @@ router
     })
   )
   .delete(
+    isLoggedIn,
     catchAsync(async (req, res, next) => {
       const { id } = req.params;
       const landmarksdeleted = await Landmark.deleteMany({ location: id });
@@ -87,6 +90,7 @@ router
     })
   )
   .patch(
+    isLoggedIn,
     validateLocation,
     catchAsync(async (req, res, next) => {
       const { id } = req.params;
@@ -114,6 +118,7 @@ router
   );
 
 router.route("/:id/edit").get(
+  isLoggedIn,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
 

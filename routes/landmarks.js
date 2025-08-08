@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Landmark = require("../models/landmark");
 const catchAsync = require("../utils/catchAsync");
+const { isLoggedIn } = require("../middleware");
 
 router.route("/:id/landmarks").post(
+  isLoggedIn,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -17,6 +19,7 @@ router.route("/:id/landmarks").post(
 );
 
 router.route("/:id/landmarks/:landmarkId").delete(
+  isLoggedIn,
   catchAsync(async (req, res, next) => {
     const { id, landmarkId } = req.params;
     const result = await Landmark.findByIdAndDelete({ _id: landmarkId });

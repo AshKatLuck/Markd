@@ -6,12 +6,27 @@ const methodOverride = require("method-override");
 const ExpressError = require("./utils/ExpressError");
 const locationRouter = require("./routes/locations.js");
 const landmarkRouter = require("./routes/landmarks.js");
+const userRouter = require("./routes/users.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+const MongoStore = require("connect-mongo");
 
 const app = express();
 
+//connect to the database
+const dburl = "mongodb://127.0.0.1:27017/markd";
+
+const store = MongoStore.create({
+  mongoUrl: dburl,
+  touchAfter: 24 * 60 * 60,
+});
+
 const sessionCofig = {
+  store: store,
+  name: "nonObviousName",
   secret: "thisisasecret",
   resave: false,
   saveUninitialized: true,
@@ -39,16 +54,24 @@ app.use(express.static("public"));
 app.use(session(sessionCofig));
 app.use(flash());
 
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 //middleware to set the success and error variables so that they are available to all pages
 app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.deletion = req.flash("deletion");
   res.locals.error = req.flash("error");
   next();
 });
 
-//connect to the database
-const dburl = "mongodb://127.0.0.1:27017/markd";
 mongoose
   .connect(dburl)
   .then(() => {
@@ -60,8 +83,18 @@ mongoose
   });
 
 //routes
+// app.get("/fakeuser", async (req, res) => {
+//   const user = new User({
+//     username: "asha",
+//     email: "asha@gmail.com",
+//   });
+//   const newUser = await User.register(user, "karthika");
+//   res.send(newUser);
+// });
+
 app.use("/locations", locationRouter);
 app.use("/locations", landmarkRouter);
+app.use("/", userRouter);
 
 //joi validation
 // const validateLocation = (req, res, next) => {

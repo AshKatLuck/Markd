@@ -1,0 +1,57 @@
+<% layout('./layout/boilerplate') %>
+<div class="row">
+  <div class="col-md-4 offset-4">
+    <section class="mt-5">
+      <h1 class="display-4 text-center mb-3">Login</h1>
+      <form action="/login" class="form needs-validation" id="myForm" novalidate method="post">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            id="username"
+            placeholder="username"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+        <div class="mb-3">
+          <label for=passworde" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            id="password"
+            placeholder="password"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+        </div>        
+          <div class="mb-3 d-flex align-items-center justify-content-center">
+            <button
+              type="Submit"
+              class="btn btn-lg btn-success btnNew me-2 flex-grow-1"
+            >
+              Login
+            </button>
+            <button
+              type="reset"
+              onclick="clearForm()"
+              id="clearBtn"
+              class="btn btn-lg btn-secondary btnNew flex-grow-1"
+            >
+              Clear
+            </button>
+          </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+
+<script>
+  function clearForm() {
+    document.getElementById("myForm").reset();
+  }
+</script>
