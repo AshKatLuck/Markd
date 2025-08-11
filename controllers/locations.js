@@ -3,6 +3,10 @@ const Landmark = require("../models/landmark");
 const { dateForHTMLForm, convertToZ } = require("../utils/dateFunctions");
 const ExpressError = require("../utils/ExpressError");
 
+const mbxGeocoding=require("@mapbox/mapbox-sdk/services/geocoding");
+const mapboxToken=process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapboxToken });
+
 module.exports.showLocations = async (req, res, next) => {
   const user = res.locals.currentUser;
   // console.log(user);
@@ -24,15 +28,18 @@ module.exports.createLocation = async (req, res, next) => {
   } else {
     location.hasTravelled = false;
   }
-
   const date = new Date(location.dateOfVisit);
   const modifiedDate = convertToZ(date);
   location.dateOfVisit = modifiedDate;
   location.userId = res.locals.currentUser._id;
-  // console.log(location.userId, res.locals.currentUser);
-  // console.log(location.dateOfVisit);
-  // console.log(req.body.location.dateOfVisit);
-
+  const queryLocation=`${location.city},${location.state},${location.country}`;
+  const geodata=await geocoder.forwardGeocode({
+    query:queryLocation,
+    limit:1
+  }).send();
+  location.geometry=geodata.body.features[0].geometry;
+  // console.log(geodata.body.features[0].center)
+  // res.send(JSON.stringify(geodata.body.features[0].center))
   const r = await location.save();
   req.flash("success", "location added succesfully!");
   res.redirect(`/locations/${r._id}`);

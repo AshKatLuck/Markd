@@ -6,3 +6,9 @@
 /* .btnNew {
   width: 300px;
 } */
+
+#map{
+  width: 850px;
+  height: 500px;
+  border-radius: 5px;
+}

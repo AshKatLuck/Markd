@@ -35,8 +35,19 @@ const locationSchema = new Schema({
     min: 1,
     max: 5,
   },
-  long: String,
-  lat: String,
+  // long: String,
+  // lat: String,
+  geometry: {
+        type: {
+            type: String, // Don't do `{ location: { type: String } }`
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
 });
 
 const Location = mongoose.model("Location", locationSchema);

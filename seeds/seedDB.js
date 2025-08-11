@@ -73,8 +73,12 @@ const seedDB = async (req, res) => {
     let cityObject = randomizer(cities);
     let city = cityObject.city;
     let state = cityObject.state;
-    let lat = cityObject.latitude;
-    let long = cityObject.longitude;
+    let geometry={
+      type:"Point",
+      coordinates:[cityObject.longitude,cityObject.latitude]
+    }
+    // let lat = cityObject.latitude;
+    // let long = cityObject.longitude;
     let country = "US";
     let description =
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est error dolores deserunt fugit, omnis dolore accusantium expedita nemo animi harum, esse obcaecati unde quisquam molestias optio,quas totam? Dicta, neque! Nihil, placeat adipisci laborum exercitationem libero atque similique! Porro sint eos voluptates sunt placeat repellat, assumenda quisquam. Voluptates aperiam eligendi temporibus at aliquam itaque, esse similique. Est sit beatae iste.";
@@ -87,8 +91,7 @@ const seedDB = async (req, res) => {
       city,
       state,
       country,
-      long,
-      lat,
+      geometry,
       description,
       rating,
       picture,

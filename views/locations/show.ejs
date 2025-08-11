@@ -60,6 +60,7 @@
   </div>
 
   <div class="col-md-6">
+    <div id="map" class="m-5"></div>
     <form
       action="/locations/<%=location._id%>/landmarks"
       class="form needs-validation m-5"
@@ -141,6 +142,8 @@
   </div>
 </div>
 
-<!-- <a href="/locations">Back to all locations</a>
-<br />
-<a href="/locations/new">Add new location</a> -->
+<script>
+    const mapboxToken= '<%=process.env.MAPBOX_TOKEN%>';
+    const locationMap= <%-JSON.stringify(location)%>
+  </script>
+<script src="/javascript/showPageMapBox.js"></script>
