@@ -7,6 +7,8 @@ const mbxGeocoding=require("@mapbox/mapbox-sdk/services/geocoding");
 const mapboxToken=process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapboxToken });
 
+
+
 module.exports.showLocations = async (req, res, next) => {
   const user = res.locals.currentUser;
   // console.log(user);

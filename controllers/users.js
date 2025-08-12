@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Location=require("../models/location")
 
 module.exports.renderRegisterPage = (req, res, next) => {
   res.render("users/register");
@@ -45,3 +46,21 @@ module.exports.logout = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+module.exports.selectLocations=async (req,res,next)=>{
+  const user = res.locals.currentUser;
+  const {selectPin}=req.body;
+  if(selectPin=="both"){
+    const locations=await Location.find({userId: user._id });
+    res.render("locations/index",{locations})
+  }else if(!selectPin){
+    const locations=await Location.find({userId: user._id });
+    res.render("locations/index",{locations})
+  }else if(selectPin=="past"){
+    const locations=await Location.find({hasTravelled:true,userId: user._id });
+    res.render("locations/index",{locations})
+  }else if(selectPin=="future"){
+    const locations=await Location.find({hasTravelled:false,userId: user._id });
+    res.render("locations/index",{locations})
+  }  
+}

@@ -1,7 +1,37 @@
 <% layout("layout/boilerplate") -%>
-
+<script src="/javascript/showPageForm.js"></script>
 <div class="row">
   <div class="col col-8 offset-2">
+    <div id="map" class="cluster-map"></div>
+    <div class="m-3">
+      <form action="/selectLocations" method="post" class="d-flex flex-row align-items-center justify-content-center" id="selectForm">
+        <!-- <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value=true name="past" checked>
+          <label class="form-check-label" for="inlineCheckbox1">Past travel pins</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value=true name="future" checked>
+          <label class="form-check-label" for="inlineCheckbox2">Future travel pins</label>
+        </div> -->
+        
+        <div class="form-check form-check-inline " id="option1">
+          <input class="form-check-input" type="radio" name="selectPin" id="past" value="past" onclick="submit()">
+          <label class="form-check-label" for="past">past travel pins</label>
+        </div>
+        <div class="form-check form-check-inline " id="option2">
+          <input class="form-check-input" type="radio" name="selectPin" id="future" value="future" onclick="submit()">
+          <label class="form-check-label" for="future">future travel pins</label>
+        </div>
+        <div class="form-check form-check-inline " id="option3">
+          <input class="form-check-input" type="radio" name="selectPin" id="both" value="both" selected onclick="submit()">
+          <label class="form-check-label" for="both">all travel pins</label>
+        </div>
+        
+        <!-- <button class="btn btn-primary">
+          submit
+        </button> -->
+      </form>
+  </div>
     <main class="container mt-5">
       <section>
         <h1 class="display-5 text-center text-primary mb-5">All locations</h1>
@@ -30,3 +60,10 @@
     </main>
   </div>
 </div>
+
+<script>
+  const mapboxToken = "<%=process.env.MAPBOX_TOKEN%>";
+  const locationsMap = {features:<%-JSON.stringify(locations)%>};
+
+</script>
+<script src="/javascript/mapCluster.js"></script>

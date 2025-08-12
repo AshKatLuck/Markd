@@ -23,4 +23,8 @@ router
   );
 
 router.route("/logout").get(isLoggedIn, Users.logout);
+
+router
+  .route("/selectLocations")
+  .post(isLoggedIn,catchAsync(Users.selectLocations));
 module.exports = router;

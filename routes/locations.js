@@ -11,6 +11,10 @@ router
 
 router.route("/new").get(isLoggedIn, locations.renderNewLocationForm);
 
+
+
+
+
 router
   .route("/:id")
   .get(isLoggedIn, isAuthor, catchAsync(locations.showLocation))
@@ -25,5 +29,7 @@ router
 router
   .route("/:id/edit")
   .get(isLoggedIn, isAuthor, catchAsync(locations.renderEditLocationForm));
+
+
 
 module.exports = router;
