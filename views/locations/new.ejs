@@ -12,6 +12,7 @@
           class="form needs-validation"
           id="myForm"
           novalidate
+          enctype="multipart/form-data"
         >
           <div class="mb-3 form-check form-switch">
             <label for="hasTravelled" class="form-check-label"
@@ -80,7 +81,7 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="picture" class="form-label">Photo(url)</label>
             <input
               type="text"
@@ -91,6 +92,12 @@
               required
             />
             <div class="valid-feedback">Looks good!</div>
+          </div> -->
+
+          <div class="mb-3 custom-file">
+          <span>Upload files:</span>
+              <label for="picture" class="form-label custom-file-label"></label>
+              <input class="form-control" type="file" id="picture" name="picture" multiple>
           </div>
 
           <div class="mb-3">

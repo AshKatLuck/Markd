@@ -1,7 +1,7 @@
 const Location = require("../models/location");
 const Landmark = require("../models/landmark");
 const { dateForHTMLForm, convertToZ } = require("../utils/dateFunctions");
-const ExpressError = require("../utils/ExpressError");
+const {cloudinary}=require("../cloudinary/index")
 
 const mbxGeocoding=require("@mapbox/mapbox-sdk/services/geocoding");
 const mapboxToken=process.env.MAPBOX_TOKEN;
@@ -40,6 +40,10 @@ module.exports.createLocation = async (req, res, next) => {
     limit:1
   }).send();
   location.geometry=geodata.body.features[0].geometry;
+  location.picture = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
   // console.log(geodata.body.features[0].center)
   // res.send(JSON.stringify(geodata.body.features[0].center))
   const r = await location.save();
@@ -92,28 +96,51 @@ module.exports.deleteLocation = async (req, res, next) => {
 };
 
 module.exports.editLocation = async (req, res, next) => {
-  const { id } = req.params;
-  const editLocation = req.body.location;
-  if (editLocation.hasTravelled) {
-    editLocation.hasTravelled = true;
-  } else {
-    editLocation.hasTravelled = false;
-  }
-  const date = new Date(editLocation.dateOfVisit);
-  const modifiedDate = convertToZ(date);
-  editLocation.dateOfVisit = modifiedDate;
-  const location = await Location.findByIdAndUpdate(
-    { _id: id },
-    { ...editLocation },
-    { runValidators: true }
-  );
-  if (!location) {
-    req.flash("error", "Location not found");
-    return next();
-  }
-  req.flash("success", `succesfully updated ${location.title}!`);
-  res.redirect(`/locations/${location._id}`);
-};
+    const { id } = req.params;
+    const pictures = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+    const editLocation = req.body.location;
+    if (editLocation.hasTravelled) {
+      editLocation.hasTravelled = true;
+    } else {
+      editLocation.hasTravelled = false;
+    }
+    const date = new Date(editLocation.dateOfVisit);
+    const modifiedDate = convertToZ(date);
+    editLocation.dateOfVisit = modifiedDate;
+
+    const location = await Location.findByIdAndUpdate(
+      { _id: id },
+      { ...editLocation },
+      { runValidators: true }
+    );
+
+    location.picture.push(...pictures);
+    // console.log(campground.location, req.body.campground.location);
+    const queryLocation=`${location.city},${location.state},${location.country}`;
+    const geodata=await geocoder.forwardGeocode({
+      query:queryLocation,
+      limit:1
+    }).send();
+    location.geometry=geodata.body.features[0].geometry;
+
+    await location.save();
+    const imagesToDelete = req.body.deleteImages;
+    if (req.body.deleteImages) {
+      for (let filename of req.body.deleteImages) {
+        await cloudinary.uploader.destroy(filename);
+      }
+
+      const res = await location.updateOne({
+        $pull: { picture: { filename: { $in: req.body.deleteImages } } },
+      });
+    }
+    if (!location) {
+      req.flash("error", "Location not found");
+      return next();
+    }
+    req.flash("success", `succesfully updated ${location.title}!`);
+    res.redirect(`/locations/${location._id}`);
+  };
 
 module.exports.renderEditLocationForm = async (req, res, next) => {
   const { id } = req.params;
@@ -125,4 +152,4 @@ module.exports.renderEditLocationForm = async (req, res, next) => {
   }
   const dateInHTMLFormat = dateForHTMLForm(location.dateOfVisit);
   res.render("locations/edit", { location, dateInHTMLFormat });
-};
+}

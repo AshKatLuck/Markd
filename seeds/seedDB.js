@@ -83,7 +83,16 @@ const seedDB = async (req, res) => {
     let description =
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est error dolores deserunt fugit, omnis dolore accusantium expedita nemo animi harum, esse obcaecati unde quisquam molestias optio,quas totam? Dicta, neque! Nihil, placeat adipisci laborum exercitationem libero atque similique! Porro sint eos voluptates sunt placeat repellat, assumenda quisquam. Voluptates aperiam eligendi temporibus at aliquam itaque, esse similique. Est sit beatae iste.";
     let rating = Math.floor(Math.random() * 5) + 1;
-    let picture = randomizer(imageUrls);
+    let picture = [
+      {
+      url:randomizer(imageUrls),
+      filename:"fromUnspash1"
+    },
+    {
+      url:randomizer(imageUrls),
+      filename:"fromUnspash2"
+    },
+  ];
     const location = {
       userId,
       hasTravelled,

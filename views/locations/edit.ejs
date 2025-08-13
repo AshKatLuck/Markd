@@ -12,6 +12,7 @@
           class="form needs-validation"
           id="myForm"
           novalidate
+          enctype="multipart/form-data"
         >
           <div class="mb-3 form-check form-switch">
             <label for="hasTravelled" class="form-check-label"
@@ -74,6 +75,11 @@
               />
               <div class="valid-feedback">Looks good!</div>
             </div>
+          </div>
+          <div class="mb-3 custom-file">
+          <span>Upload files:</span>
+              <label for="picture" class="form-label custom-file-label"></label>
+              <input class="form-control" type="file" id="picture" name="picture" multiple>
           </div>
 
           <div class="mb-3">
@@ -156,6 +162,21 @@
               <label for="first-rate5" title="Amazing">5 stars</label>
             </fieldset>   
           </div>
+          
+          <div class="mb-3 custom-file">
+          <span>Upload more images:</span>
+              <label for="image" class="form-label custom-file-label"></label>
+              <input class="form-control" type="file" id="image" name="image" multiple>
+        </div>
+        <div class="mb-3">
+          <% location.picture.forEach((img,i)=>{ %>
+          <img src="<%=img.thumbnail  %>" alt="" class="img-thumbnail">
+          <div class="form-check-inline">
+            <input type="checkbox" id="image-<%=i  %>" name="deleteImages[]" value="<%=img.filename  %>">
+          </div>
+          <label for="image-<%=i  %>">Delete?</label>
+          <% }) %>
+        </div>
 
           <div class="mb-3 d-flex align-items-center justify-content-center">
             <button

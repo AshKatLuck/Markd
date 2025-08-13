@@ -3,11 +3,14 @@ const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, isAuthor, validateLocation } = require("../middleware");
 const locations = require("../controllers/locations");
+const multer = require("multer");
+const { storage } = require("../cloudinary");
+const upload = multer({ storage });
 
 router
   .route("/")
   .get(isLoggedIn, catchAsync(locations.showLocations))
-  .post(isLoggedIn, validateLocation, catchAsync(locations.createLocation));
+  .post(isLoggedIn,upload.array("picture"), validateLocation, catchAsync(locations.createLocation));
 
 router.route("/new").get(isLoggedIn, locations.renderNewLocationForm);
 
@@ -22,6 +25,7 @@ router
   .patch(
     isLoggedIn,
     isAuthor,
+    upload.array("picture"),
     validateLocation,
     catchAsync(locations.editLocation)
   );

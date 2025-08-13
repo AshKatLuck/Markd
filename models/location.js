@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const ImageSchema = new Schema({
+  url: String,
+  filename: String,
+});
+ImageSchema.virtual("thumbnail").get(function () {
+  return this.url.replace("/upload", "/upload/c_thumb,w_200,g_face");
+});
+
 const locationSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,9 +33,7 @@ const locationSchema = new Schema({
     type: String,
     required: true,
   },
-  picture: {
-    type: String,
-  },
+  picture: [ImageSchema],
   dateOfVisit: Date,
   description: String,
   rating: {
