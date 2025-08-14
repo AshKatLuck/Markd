@@ -40,7 +40,9 @@
         <section>
           <div class="row border-bottom mb-2 pb-2">
             <div class="col-md-5">
+              <% if(location.picture[0]){ %>
               <img class="img-fluid" src="<%=location.picture[0].url  %>" alt="" />
+              <% } %>
             </div>
             <div class="col-md-7">
               <h2>

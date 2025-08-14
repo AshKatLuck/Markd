@@ -34,6 +34,7 @@ const locationSchema = new Schema({
     required: true,
   },
   picture: [ImageSchema],
+
   dateOfVisit: Date,
   description: String,
   rating: {

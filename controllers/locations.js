@@ -20,11 +20,15 @@ module.exports.showLocations = async (req, res, next) => {
   res.render("locations/index", { locations });
 };
 
+
+
 module.exports.createLocation = async (req, res, next) => {
   let userId = res.locals.currentUser._id;
+  const {imageUpload}=req.body;
   const location = new Location(req.body.location);
   location.userId = userId;
-
+  // console.log(req.body.location);
+  // console.log(location);
   if (location.hasTravelled) {
     location.hasTravelled = true;
   } else {
@@ -40,12 +44,24 @@ module.exports.createLocation = async (req, res, next) => {
     limit:1
   }).send();
   location.geometry=geodata.body.features[0].geometry;
-  location.picture = req.files.map((f) => ({
+
+  // console.log(imageUpload);
+  //for url upload
+  if(imageUpload=="urlUpload"){  
+    const url=req.body.location.picture;
+    // console.log(url);
+    location.picture=[{
+      url:url,
+      filename:location.title,
+    }];
+  }else if(imageUpload=="fileUpload"){
+    location.picture = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,
   }));
-  // console.log(geodata.body.features[0].center)
-  // res.send(JSON.stringify(geodata.body.features[0].center))
+
+  }
+  // res.send(location); 
   const r = await location.save();
   req.flash("success", "location added succesfully!");
   res.redirect(`/locations/${r._id}`);
@@ -85,8 +101,19 @@ module.exports.showLocation = async (req, res, next) => {
 module.exports.deleteLocation = async (req, res, next) => {
   const { id } = req.params;
   const landmarksdeleted = await Landmark.deleteMany({ location: id });
-  // console.log("landmarks deleted", landmarksdeleted);
+  const location=await Location.findById({_id:id});
+  // console.log("inside deleteLocation:",location)
+  for(let i=0;i<location.picture.length;i++){
+    // console.log("inside for loop")
+    const result=await cloudinary.search.expression(`public_id:${location.picture[i].filename}`).execute();
+    // console.log("total count:$$$",result.total_count);
+    if(result.total_count>0){
+      const delStatus=await cloudinary.uploader.destroy(location.picture[i].filename);
+      // console.log("delStatus:", delStatus);
+    }    
+  }
   const result = await Location.findByIdAndDelete({ _id: id });
+  // console.log('result of deleting from locations table:',result);
   if (!result) {
     req.flash("error", "Location not found");
     return next();
@@ -96,9 +123,15 @@ module.exports.deleteLocation = async (req, res, next) => {
 };
 
 module.exports.editLocation = async (req, res, next) => {
+  // console.log("editLocations")
     const { id } = req.params;
-    const pictures = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+    const originalLocation=await Location.findById({_id:id});
+    // console.log("req.body :", req.body);
+    const {imageUpload}=req.body;
+    // console.log("imageUpload", imageUpload)
+    // const pictures = req.files.map((f) => ({ url: f.path, filename: f.filename }));
     const editLocation = req.body.location;
+    // console.log("editLocation", editLocation)
     if (editLocation.hasTravelled) {
       editLocation.hasTravelled = true;
     } else {
@@ -107,32 +140,54 @@ module.exports.editLocation = async (req, res, next) => {
     const date = new Date(editLocation.dateOfVisit);
     const modifiedDate = convertToZ(date);
     editLocation.dateOfVisit = modifiedDate;
-
+    editLocation.picture=originalLocation.picture;
+    // console.log("original location", originalLocation);
+    // console.log("editLocation:", editLocation);
+    // console.log("req.body.deleteImages",req.body.deleteImages);
+    // console.log("imageUploadRadio",imageUpload)
     const location = await Location.findByIdAndUpdate(
       { _id: id },
       { ...editLocation },
-      { runValidators: true }
+      { runValidators: true, new:true }      
     );
 
-    location.picture.push(...pictures);
-    // console.log(campground.location, req.body.campground.location);
     const queryLocation=`${location.city},${location.state},${location.country}`;
     const geodata=await geocoder.forwardGeocode({
       query:queryLocation,
       limit:1
     }).send();
     location.geometry=geodata.body.features[0].geometry;
+    // console.log("location after updation and geocoding", location)
 
+    if(imageUpload=="urlUpload"){  
+      const url=req.body.picture;
+      // console.log(url);
+      editLocation.picture=[{
+        url:url,
+        filename:`${editLocation.title}_${(Math.floor(Math.random()*1000))}`,
+      }];
+      // console.log(editLocation);
+    }else if(imageUpload=="fileUpload"){
+      editLocation.picture = req.files.map((f) => ({
+      url: f.path,
+      filename: f.filename,
+    }));
+    // console.log(editLocation)
+    }
+    if(imageUpload){
+      location.picture.push(...editLocation.picture);
+    } 
+    // console.log("location after adding new files",location);  
     await location.save();
-    const imagesToDelete = req.body.deleteImages;
+    // // const imagesToDelete = req.body.deleteImages;
+    // // console.log("images to delete",imagesToDelete)
     if (req.body.deleteImages) {
       for (let filename of req.body.deleteImages) {
-        await cloudinary.uploader.destroy(filename);
+        const result1=await cloudinary.uploader.destroy(filename);
+        // console.log("in cloudinary fopr loop result:", result1)        
       }
-
-      const res = await location.updateOne({
-        $pull: { picture: { filename: { $in: req.body.deleteImages } } },
-      });
+      const result2 = await location.updateOne({$pull: { picture: { filename: { $in: req.body.deleteImages } } }, });
+      // console.log("Table updation results:", result2);
     }
     if (!location) {
       req.flash("error", "Location not found");
@@ -140,7 +195,9 @@ module.exports.editLocation = async (req, res, next) => {
     }
     req.flash("success", `succesfully updated ${location.title}!`);
     res.redirect(`/locations/${location._id}`);
+    // res.send(location);
   };
+
 
 module.exports.renderEditLocationForm = async (req, res, next) => {
   const { id } = req.params;

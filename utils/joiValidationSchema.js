@@ -9,8 +9,8 @@ module.exports.locationJoiSchema = Joi.object({
   rating: Joi.number().required(),
   dateOfVisit: Joi.date().iso().required(),
   description: Joi.string(),
-  picture: Joi.string(),
   hasTravelled: Joi.string(),
+  picture:Joi.string().allow(""),  
 }).required();
 
 module.exports.landmarkJoiSchema = Joi.object({

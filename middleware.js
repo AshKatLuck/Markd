@@ -42,6 +42,7 @@ module.exports.isAuthor = async (req, res, next) => {
 //joi validation
 module.exports.validateLocation = (req, res, next) => {
   const location = req.body.location;
+  console.log("location from validateLocation:",location)
   const userId = res.locals.currentUser._id.toString();
   location.userId = userId;
   const { error } = locationJoiSchema.validate(location);

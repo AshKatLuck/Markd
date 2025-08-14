@@ -24,14 +24,14 @@
 
 
 //for file upload to show the file names
-document.addEventListener("DOMContentLoaded", function () {
-  const fileInput = document.getElementById("formFile");
-  const fileLabel = document.querySelector('label[for="formFile"]'); // Select the label associated with the input
+// document.addEventListener("DOMContentLoaded", function () {
+//   const fileInput = document.getElementById("formFile");
+//   const fileLabel = document.querySelector('label[for="formFile"]'); // Select the label associated with the input
 
-  fileInput.addEventListener("change", function (event) {
-    const fileName = event.target.files[0]
-      ? event.target.files[0].name
-      : "Default file input example";
-    fileLabel.textContent = fileName;
-  });
-});
+//   fileInput.addEventListener("change", function (event) {
+//     const fileName = event.target.files[0]
+//       ? event.target.files[0].name
+//       : "Default file input example";
+//     fileLabel.textContent = fileName;
+//   });
+// });

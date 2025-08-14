@@ -9,7 +9,7 @@
         <form
           action="/locations"
           method="post"
-          class="form needs-validation"
+          class="form needs-validation myForm"
           id="myForm"
           novalidate
           enctype="multipart/form-data"
@@ -80,21 +80,30 @@
               <div class="valid-feedback">Looks good!</div>
             </div>
           </div>
-
-          <!-- <div class="mb-3">
+          <div class="mb-3">          
+            <div class="form-check form-check-inline">
+              <input class="form-check-input imageUpload" type="radio" name="imageUpload" id="url" value="urlUpload">
+              <label class="form-check-label" for="url">url</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input imageUpload" type="radio" name="imageUpload" id="fileUpload" value="fileUpload">
+              <label class="form-check-label" for="fileUpload">fileupload</label>
+            </div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="mb-3" id="urlUploadDiv">
             <label for="picture" class="form-label">Photo(url)</label>
             <input
               type="text"
               name="location[picture]"
               id="picture"
               placeholder="url of photo"
-              class="form-control"
-              required
+              class="form-control"              
             />
             <div class="valid-feedback">Looks good!</div>
-          </div> -->
+          </div>
 
-          <div class="mb-3 custom-file">
+          <div class="mb-3 custom-file" id="fileUploadDiv">
           <span>Upload files:</span>
               <label for="picture" class="form-label custom-file-label"></label>
               <input class="form-control" type="file" id="picture" name="picture" multiple>
@@ -188,8 +197,44 @@
   </div>
 </div>
 
-<script>
-  function clearForm() {
-    document.getElementById("myForm").reset();
-  }
+<script src="/javascript/newEditForm.js">
+  // function clearForm() {
+  //   document.getElementById("myForm").reset();
+  // }
+
+  //     // Example using JavaScript
+  //   const radioBtns=document.querySelectorAll(".imageUpload");
+  //   console.log(radioBtns);
+  //   for(let i=0;i<radioBtns.length;i++)
+  //     {
+  //       radioBtns[i].addEventListener("change", function() {
+  //       let controllingValue = this.value;
+  //       console.log(controllingValue)
+  //       let urlUploadDiv=document.getElementById("urlUploadDiv");
+  //       let fileUploadDiv=document.getElementById("fileUploadDiv");
+
+  //       if (controllingValue === "urlUpload") {
+  //           fileUploadDiv.style.display = "none"; 
+  //           urlUploadDiv.style.display="";
+  //       } else {
+  //           urlUploadDiv.style.display = "none";
+  //           fileUploadDiv.style.display="";
+  //                       //for file upload to show the file names
+  //           document.addEventListener("DOMContentLoaded", function () {
+  //             const fileInput = document.getElementById("formFile");
+  //             const fileLabel = document.querySelector('label[for="formFile"]'); // Select the label associated with the input
+
+  //             fileInput.addEventListener("change", function (event) {
+  //               const fileName = event.target.files[0]
+  //                 ? event.target.files[0].name
+  //                 : "Default file input example";
+  //               fileLabel.textContent = fileName;
+  //             });
+  //           });
+  //       }
+  //       });
+  //     }
+
+
+    
 </script>
